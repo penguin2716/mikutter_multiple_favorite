@@ -118,8 +118,10 @@ Plugin.create :multiple_favorite do
           role: :timeline) do |opt|
     opt.messages.each do |m|
       @services.each do |username_sym, twitter|
-        twitter.favorite(m[:id])
-        m.add_favorited_by(User.findbyidname(username_sym.to_s))
+        Thread.new {
+          twitter.favorite(m[:id])
+          m.add_favorited_by(User.findbyidname(username_sym.to_s))
+        }
       end
     end
   end
